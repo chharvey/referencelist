@@ -32,9 +32,10 @@
   </cite>
 </li>
   */
-function addReferencesToList(html_list) {
-  for (id in references) {
-    var thisref = references[id];
+function addReferencesToList(reference_object, html_list) {
+  for (id in reference_object) {
+    var thisref = reference_object[id];
+    console.log(thisref);
     $(html_list).append($('<li>').append($('<cite>')
       .attr('id',id)
       .attr('itemprop','citation')
@@ -43,8 +44,10 @@ function addReferencesToList(html_list) {
       .append(
         $('<span>').attr('itemprop','author').each(function () {
           for (var i = 0; i < thisref.author.length; i++) {
-            if (i > 0) $(this).append(', ');
-            if (0 < i && i == thisref.author.length-1) $(this).append(' &amp; ');
+            if (i > 0) {
+              $(this).append(', ');
+              if (i === thisref.author.length-1) $(this).append(' &amp; ');
+            }
             $(this).append(
               $('<span>').attr('itemscope','').attr('itemtype','https://schema.org/Person')
                 .append($('<span>').attr('itemprop','name').html('' + thisref.author[i].name))
@@ -68,202 +71,5 @@ function addReferencesToList(html_list) {
         )
       )
     ));
-  }
-}
-
-var references = {
-  'Mardsen2003' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'Vector calculus',
-    bookEdition : '5',
-    author : [
-      { name : 'Marsden, J. E.' },
-      { name : 'Tromba, A. J.' }
-    ],
-    datePublished : 2003,
-    publisher : {
-      name : 'W. H. Freeman and Company',
-      location : {
-        address : {
-          addressLocality : 'New York',
-          addressRegion : 'NY'
-        },
-        geo : {
-          latitude : 40.7033127,
-          longitude: -73.979681
-        }
-      }
-    },
-    alternateName : 'QA303 .M338 2003',
-    isbn : '978-0716749929'
-  },
-  'Arnold2002' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'An introduction to mathematical proofs',
-    bookEdition : '',
-    author : [
-      { name : 'Arnold, J. T.' }
-    ],
-    datePublished : 2002,
-    publisher : {
-      name : '',
-      location : {
-        address : {
-          addressLocality : '',
-          addressRegion : ''
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : '',
-    isbn : ''
-  },
-  'Hrbacek1984' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'Introduction to set theory: Second edition, revised and expanded',
-    bookEdition : '2',
-    author : [
-      { name : 'Hrbacek, K.' },
-      { name : 'Jech, T.' }
-    ],
-    datePublished : 1984,
-    publisher : {
-      name : 'Marcel Dekker, Inc.',
-      location : {
-        address : {
-          addressLocality : 'New York',
-          addressRegion : 'NY'
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : 'QA248 .H68 1984',
-    isbn : ''
-  },
-  'Halmos1974' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'Naive set theory',
-    bookEdition : '',
-    author : [
-      { name : 'Halmos, P. R.' }
-    ],
-    datePublished : 1974,
-    publisher : {
-      name : 'Springer-Verlag, Inc.',
-      location : {
-        address : {
-          addressLocality : 'New York',
-          addressRegion : 'NY'
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : 'QA248 .H26 1974 c.2',
-    isbn : ''
-  },
-  'Faticoni2006' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'The mathematics of infinity: A guide to great ideas',
-    bookEdition : '',
-    author : [
-      { name : 'Faticoni, T. G.' }
-    ],
-    datePublished : 2006,
-    publisher : {
-      name : 'John Wiley and Sons, Inc.',
-      location : {
-        address : {
-          addressLocality : 'Hoboken',
-          addressRegion : 'NJ'
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : 'QA248 .F29 2006',
-    isbn : ''
-  },
-  'Enderton1977' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'Elements of set theory',
-    bookEdition : '',
-    author : [
-      { name : 'Enderton, H. B.' }
-    ],
-    datePublished : 1977,
-    publisher : {
-      name : 'Adacemic Press, Inc.',
-      location : {
-        address : {
-          addressLocality : 'New York',
-          addressRegion : 'NY'
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : 'QA248 .E5',
-    isbn : ''
-  },
-  'Durbin2005' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'Modern algebra: An introduction',
-    bookEdition : '5',
-    author : [
-      { name : 'Durbin, J. R.' }
-    ],
-    datePublished : 2005,
-    publisher : {
-      name : 'John Wiley and Sons, Inc.',
-      location : {
-        address : {
-          addressLocality : 'Hoboken',
-          addressRegion : 'NJ'
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : 'QA162 .D87 2005',
-    isbn : ''
-  },
-  'Abbott2001' : {
-    itemtype : 'https://schema.org/Book',
-    name : 'Understanding analysis',
-    bookEdition : '',
-    author : [
-      { name : 'Abbott, S.' }
-    ],
-    datePublished : 2001,
-    publisher : {
-      name : 'Springer Science+Business Media, LLC',
-      location : {
-        address : {
-          addressLocality : 'New York',
-          addressRegion : 'NY'
-        },
-        geo : {
-          latitude : 0,
-          longitude: 0
-        }
-      }
-    },
-    alternateName : 'QA300 .A18 2001',
-    isbn : ''
   }
 }
