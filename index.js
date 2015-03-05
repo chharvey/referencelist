@@ -36,11 +36,13 @@
                        the list to which to add references
   */
 function addReferencesToList(reference_array, html_list) {
-  var update = d3.select(html_list).selectAll('cite').data(reference_array);
-  var cite = update.enter().append('li').append('cite').attr('itemprop','citation')
+  var update = d3.select(html_list).selectAll('li').data(reference_array);
+  update.enter().append('li');
+  update.exit().remove();
+
+  var cite = d3.select(html_list).selectAll('li').append('cite').attr('itemprop','citation')
     .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype; })
     .attr('id', function (d) { return d.id; });
-  update.exit().remove();
 
   cite.author = cite.append('span').attr('itemprop','author');
 
