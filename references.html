@@ -19,7 +19,29 @@
 <body>
 <main>
 <h1>References</h1>
-<ul class="RefList">
+<ul class="RefList" data-bind="foreach: references">
+  <li>
+    <cite itemprop="citation" itemscope="" itemtype="">
+      <span itemprop="author" itemscope="" itemtype="https://schema.org/Person" data-bind="foreach: references[i].author">
+        <span itemprop="name" data-bind="text: name"></span>
+      </span>
+      <time itemprop="datePublished" datetime="" data-bind="text: datePublished"></time>
+      <span itemprop="name" data-bind="text: name"></span>
+      <span itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+        <span itemprop="location" itemscope="" itemtype="http://schema.org/Place">
+          <span itemprop="address" itemscope="" itemtype="http://schema.org/PostalAddress">
+            <span itemprop="addressLocality" data-bind="text: addressLocality"></span>
+            <span itemprop="addressRegion" data-bind="text: addressRegion"></span>
+          </span>
+          <span itemprop="geo" itemscope="" itemtype="http://schema.org/GeoCoordinates">
+            <meta itemprop="latitude" content="" data-bind="text: latitude"/>
+            <meta itemprop="longitude" content="" data-bind="text: longitude"/>
+          </span>
+        </span>
+        <span itemprop="name" data-bind="text: name"></span>
+      </span>
+    </cite>
+  </li>
 </ul>
 </main>
 <script src="./bower_components/jquery/dist/jquery.js"></script>

@@ -103,6 +103,8 @@ function addReferencesToList(reference_array, html_list) {
         return ' ' + d.publisher.name + (d.publisher.name.substr(-1) === '.' ? '' : '.')
       });
 
+  console.log(cite);
+
   /**
     * Appends an HTML element, marked up with microdata, to a given element. This function is
     * cleaner, but more verbose. Examples below. The first is using normal d3 syntax while
