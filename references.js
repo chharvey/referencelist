@@ -36,44 +36,89 @@
                        the list to which to add references
   */
 function addReferencesToList(reference_array, html_list) {
-  console.log(reference_array);
-  for (j in reference_array) {
-    var thisref = reference_array[j];
-    console.log(thisref);
-    $(html_list).append($('<li>').append($('<cite>')
-      .attr('id',thisref.id)
-      .attr('itemprop','citation')
-      .attr('itemscope','')
-      .attr('itemtype',thisref.itemtype)
-      .append(
-        $('<span>').attr('itemprop','author').each(function () {
-          for (var i = 0; i < thisref.author.length; i++) {
-            if (i > 0) {
-              $(this).append(', ');
-              if (i === thisref.author.length-1) $(this).append(' &amp; ');
-            }
-            $(this).append(
-              $('<span>').attr('itemscope','').attr('itemtype','https://schema.org/Person')
-                .append($('<span>').attr('itemprop','name').html('' + thisref.author[i].name))
-            );
-          }
-        }),
-        $('<time>').attr('itemprop','datePublished').attr('datetime',thisref.datePublished).html(' (' + thisref.datePublished + ').'),
-        $('<span>').attr('itemprop','name').html(' ' + thisref.name + '.'),
-        $('<span>').attr('itemprop','publisher').attr('itemscope','').attr('itemtype','https://schema.org/Organization').append(
-          $('<span>').attr('itemprop','location').attr('itemscope','').attr('itemtype','https://schema.org/Place').append(
-            $('<span>').attr('itemprop','address').attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress').append(
-              $('<span>').attr('itemprop','addressLocality').html(' ' + thisref.publisher.location.address.addressLocality + ','),
-              $('<span>').attr('itemprop','addressRegion').html(' ' + thisref.publisher.location.address.addressRegion + ':')
-            ),
-            $('<span>').attr('itemprop','geo').attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates').append(
-              $('<meta>').attr('itemprop','latitude').attr('content', thisref.publisher.location.geo.latitude),
-              $('<meta>').attr('itemprop','longitude').attr('content', thisref.publisher.location.geo.longitude)
-            )
-          ),
-          $('<span>').attr('itemprop','name').html(' ' + thisref.publisher.name + '.')
-        )
-      )
-    ));
-  }
+  var cite = d3.select(html_list).selectAll('li > cite')
+    .data(reference_array).enter()
+    .append('li')
+      .append('cite').attr('itemprop','citation')
+        .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype; })
+        .attr('id', function (d) { return d.id; });
+
+  cite.author = cite.append('span').attr('itemprop','author') // array
+    .append('span') // array element
+      .attr('itemscope','').attr('itemtype','https://schema.org/Person')
+      .append('span').attr('itemprop','name')
+        .text(function (d) { return d.author[0].name; });
+
+  cite.datePublished = cite.append('time').attr('itemprop','datePublished')
+    .attr('datetime', function (d) { return d.datePublished; })
+    .text(function (d) { return ' (' + d.datePublished + ').'; });
+
+  cite.name = cite.append('span').attr('itemprop','name')
+    .text(function (d) { return ' ' + d.name + '.'; });
+
+  cite.publisher = cite.append('span').attr('itemprop','publisher')
+    .attr('itemscope','').attr('itemtype','https://schema.org/Organization');
+
+    cite.publisher.location = cite.publisher.append('span').attr('itemprop','location')
+      .attr('itemscope','').attr('itemtype','https://schema.org/Place');
+
+      cite.publisher.location.address = cite.publisher.location.append('span').attr('itemprop','address')
+        .attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress');
+
+        cite.publisher.location.address.append('span').attr('itemprop','addressLocality')
+          .text(function (d) { return ' ' + d.publisher.location.address.addressLocality + ','; })
+
+        cite.publisher.location.address.append('span').attr('itemprop','addressRegion')
+          .text(function (d) { return ' ' + d.publisher.location.address.addressRegion + ','; });
+
+      cite.publisher.location.geo = cite.publisher.location.append('span').attr('itemprop','geo')
+        .attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates');
+
+        cite.publisher.location.geo.append('meta').attr('itemprop','latitude')
+          .attr('content', function (d) { return d.publisher.location.geo.latitude; });
+
+        cite.publisher.location.geo.append('meta').attr('itemprop','longitude')
+          .attr('content', function (d) { return d.publisher.location.geo.longitude; });
+
+    cite.publisher.name = cite.publisher.append('span').attr('itemprop','name')
+      .text(function (d) { return ' ' + d.publisher.name + '.' });
+
+  // for (var j in reference_array) {
+  //   var thisref = reference_array[j];
+  //   $(html_list).append($('<li>').append($('<cite>')
+  //     .attr('id',thisref.id)
+  //     .attr('itemprop','citation')
+  //     .attr('itemscope','')
+  //     .attr('itemtype',thisref.itemtype)
+  //     .append(
+  //       $('<span>').attr('itemprop','author').each(function () {
+  //         for (var i = 0; i < thisref.author.length; i++) {
+  //           if (i > 0) {
+  //             $(this).append(', ');
+  //             if (i === thisref.author.length-1) $(this).append(' &amp; ');
+  //           }
+  //           $(this).append(
+  //             $('<span>').attr('itemscope','').attr('itemtype','https://schema.org/Person')
+  //               .append($('<span>').attr('itemprop','name').html('' + thisref.author[i].name))
+  //           );
+  //         }
+  //       }),
+  //       $('<time>').attr('itemprop','datePublished').attr('datetime',thisref.datePublished).html(' (' + thisref.datePublished + ').'),
+  //       $('<span>').attr('itemprop','name').html(' ' + thisref.name + '.'),
+  //       $('<span>').attr('itemprop','publisher').attr('itemscope','').attr('itemtype','https://schema.org/Organization').append(
+  //         $('<span>').attr('itemprop','location').attr('itemscope','').attr('itemtype','https://schema.org/Place').append(
+  //           $('<span>').attr('itemprop','address').attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress').append(
+  //             $('<span>').attr('itemprop','addressLocality').html(' ' + thisref.publisher.location.address.addressLocality + ','),
+  //             $('<span>').attr('itemprop','addressRegion').html(' ' + thisref.publisher.location.address.addressRegion + ':')
+  //           ),
+  //           $('<span>').attr('itemprop','geo').attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates').append(
+  //             $('<meta>').attr('itemprop','latitude').attr('content', thisref.publisher.location.geo.latitude),
+  //             $('<meta>').attr('itemprop','longitude').attr('content', thisref.publisher.location.geo.longitude)
+  //           )
+  //         ),
+  //         $('<span>').attr('itemprop','name').html(' ' + thisref.publisher.name + '.')
+  //       )
+  //     )
+  //   ));
+  // }
 }
