@@ -8,7 +8,10 @@
 <link rel="stylesheet" href="file:///Users/Chris/Repositories/chharvey.github.io/bower_components/normalize.css/normalize.css">
 <link rel="stylesheet" href="file:///Users/Chris/Repositories/chharvey.github.io/core/styles/default/default.css">
 <style>
-[itemtype="http://schema.org/Book"] > [itemprop="name"] {
+.RefList cite {
+  font-style: inherit;
+}
+.RefList [itemtype$="Book"] > [itemprop~="name"] {
   font-style: italic;
 }
 </style>
@@ -22,8 +25,9 @@
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 <script src="references.js"></script>
 <script>
-var references = {
-  'Mardsen2003' : {
+var references = [
+  {
+    id : 'Mardsen2003',
     itemtype : 'https://schema.org/Book',
     name : 'Vector calculus',
     bookEdition : '5',
@@ -48,7 +52,8 @@ var references = {
     alternateName : 'QA303 .M338 2003',
     isbn : '978-0716749929'
   },
-  'Arnold2002' : {
+  {
+    id : 'Arnold2002',
     itemtype : 'https://schema.org/Book',
     name : 'An introduction to mathematical proofs',
     bookEdition : '',
@@ -72,7 +77,8 @@ var references = {
     alternateName : '',
     isbn : ''
   },
-  'Hrbacek1984' : {
+  {
+    id : 'Hrbacek1984',
     itemtype : 'https://schema.org/Book',
     name : 'Introduction to set theory: Second edition, revised and expanded',
     bookEdition : '2',
@@ -97,7 +103,8 @@ var references = {
     alternateName : 'QA248 .H68 1984',
     isbn : ''
   },
-  'Halmos1974' : {
+  {
+    id : 'Halmos1974',
     itemtype : 'https://schema.org/Book',
     name : 'Naive set theory',
     bookEdition : '',
@@ -121,7 +128,8 @@ var references = {
     alternateName : 'QA248 .H26 1974 c.2',
     isbn : ''
   },
-  'Faticoni2006' : {
+  {
+    id : 'Faticoni2006',
     itemtype : 'https://schema.org/Book',
     name : 'The mathematics of infinity: A guide to great ideas',
     bookEdition : '',
@@ -145,7 +153,8 @@ var references = {
     alternateName : 'QA248 .F29 2006',
     isbn : ''
   },
-  'Enderton1977' : {
+  {
+    id : 'Enderton1977',
     itemtype : 'https://schema.org/Book',
     name : 'Elements of set theory',
     bookEdition : '',
@@ -169,7 +178,8 @@ var references = {
     alternateName : 'QA248 .E5',
     isbn : ''
   },
-  'Durbin2005' : {
+  {
+    id : 'Durbin2005',
     itemtype : 'https://schema.org/Book',
     name : 'Modern algebra: An introduction',
     bookEdition : '5',
@@ -193,7 +203,8 @@ var references = {
     alternateName : 'QA162 .D87 2005',
     isbn : ''
   },
-  'Abbott2001' : {
+  {
+    id : 'Abbott2001',
     itemtype : 'https://schema.org/Book',
     name : 'Understanding analysis',
     bookEdition : '',
@@ -217,8 +228,8 @@ var references = {
     alternateName : 'QA300 .A18 2001',
     isbn : ''
   }
-}
-addReferencesToList(references, 'ul');
+]
+addReferencesToList(references, '.RefList');
 </script>
 </body>
 </html>

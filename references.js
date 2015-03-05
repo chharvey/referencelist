@@ -1,5 +1,5 @@
 /**
-  * Selects and HTML list (either `ul` or `ol` Element), and appends an `li` Element
+  * Selects an HTML list (either `ul` or `ol` Element), and appends an `li` Element
   * for each item in the Global `references` object (below).
   * Each `li` Element contains `span` Elements marked up with Microdata (Schema.org)
   * that represents the actual reference. Example:
@@ -31,13 +31,17 @@
     </span>
   </cite>
 </li>
+@param reference_array the array of reference objects to add to the list
+@param html_list       a string in jQuery selector format representing
+                       the list to which to add references
   */
-function addReferencesToList(reference_object, html_list) {
-  for (id in reference_object) {
-    var thisref = reference_object[id];
+function addReferencesToList(reference_array, html_list) {
+  console.log(reference_array);
+  for (j in reference_array) {
+    var thisref = reference_array[j];
     console.log(thisref);
     $(html_list).append($('<li>').append($('<cite>')
-      .attr('id',id)
+      .attr('id',thisref.id)
       .attr('itemprop','citation')
       .attr('itemscope','')
       .attr('itemtype',thisref.itemtype)
