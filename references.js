@@ -32,20 +32,19 @@
   </cite>
 </li>
 @param reference_array the array of reference objects to add to the list
-@param html_list       a string in jQuery selector format representing
+@param html_list       a string in jQuery/d3 selector format representing
                        the list to which to add references
   */
 function addReferencesToList(reference_array, html_list) {
-  var cite = d3.select(html_list).selectAll('li > cite')
-    .data(reference_array).enter()
-    .append('li')
-      .append('cite').attr('itemprop','citation')
-        .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype; })
-        .attr('id', function (d) { return d.id; });
+  var update = d3.select(html_list).selectAll('cite').data(reference_array);
+  var cite = update.enter().append('li').append('cite').attr('itemprop','citation')
+    .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype; })
+    .attr('id', function (d) { return d.id; });
+  update.exit().remove();
 
   cite.author = cite.append('span').attr('itemprop','author');
 
-    cite.author.person = cite.author.selectAll('span[itemtype="https://schema.org/Person"]')
+    cite.author.person = cite.author.selectAll('span')
       .data(function (d) { return d.author; }).enter()
       .append('span')
         .attr('itemscope','').attr('itemtype','https://schema.org/Person')
@@ -103,45 +102,6 @@ function addReferencesToList(reference_array, html_list) {
       .text(function (d) {
         return ' ' + d.publisher.name + (d.publisher.name.substr(-1) === '.' ? '' : '.')
       });
-
-  // for (var j in reference_array) {
-  //   var thisref = reference_array[j];
-  //   $(html_list).append($('<li>').append($('<cite>')
-  //     .attr('id',thisref.id)
-  //     .attr('itemprop','citation')
-  //     .attr('itemscope','')
-  //     .attr('itemtype',thisref.itemtype)
-  //     .append(
-  //       $('<span>').attr('itemprop','author').each(function () {
-  //         for (var i = 0; i < thisref.author.length; i++) {
-  //           if (i > 0) {
-  //             $(this).append(', ');
-  //             if (i === thisref.author.length-1) $(this).append(' &amp; ');
-  //           }
-  //           $(this).append(
-  //             $('<span>').attr('itemscope','').attr('itemtype','https://schema.org/Person')
-  //               .append($('<span>').attr('itemprop','name').html('' + thisref.author[i].name))
-  //           );
-  //         }
-  //       }),
-  //       $('<time>').attr('itemprop','datePublished').attr('datetime',thisref.datePublished).html(' (' + thisref.datePublished + ').'),
-  //       $('<span>').attr('itemprop','name').html(' ' + thisref.name + '.'),
-  //       $('<span>').attr('itemprop','publisher').attr('itemscope','').attr('itemtype','https://schema.org/Organization').append(
-  //         $('<span>').attr('itemprop','location').attr('itemscope','').attr('itemtype','https://schema.org/Place').append(
-  //           $('<span>').attr('itemprop','address').attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress').append(
-  //             $('<span>').attr('itemprop','addressLocality').html(' ' + thisref.publisher.location.address.addressLocality + ','),
-  //             $('<span>').attr('itemprop','addressRegion').html(' ' + thisref.publisher.location.address.addressRegion + ':')
-  //           ),
-  //           $('<span>').attr('itemprop','geo').attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates').append(
-  //             $('<meta>').attr('itemprop','latitude').attr('content', thisref.publisher.location.geo.latitude),
-  //             $('<meta>').attr('itemprop','longitude').attr('content', thisref.publisher.location.geo.longitude)
-  //           )
-  //         ),
-  //         $('<span>').attr('itemprop','name').html(' ' + thisref.publisher.name + '.')
-  //       )
-  //     )
-  //   ));
-  // }
 
   /**
     * Appends an HTML element, marked up with microdata, to a given element. This function is
