@@ -36,18 +36,18 @@
                        the list to which to add references
   */
 function addReferencesToList(reference_array, html_list) {
-  var update = d3.select(html_list).selectAll('li').data(reference_array);
-  update.enter().append('li');
-  update.exit().remove();
+  var update = d3.select(html_list).selectAll('li').data(reference_array)
+  update.enter().append('li')
+  update.exit().remove()
 
   var cite = d3.select(html_list).selectAll('li').append('cite').attr('itemprop','citation')
-    .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype; })
-    .attr('id', function (d) { return d.id; });
+    .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype })
+    .attr('id', function (d) { return d.id })
 
-  cite.author = cite.append('span').attr('itemprop','author');
+  cite.author = cite.append('span').attr('itemprop','author')
 
     cite.author.person = cite.author.selectAll('span')
-      .data(function (d) { return d.author; }).enter()
+      .data(function (d) { return d.author }).enter()
       .append('span')
         .attr('itemscope','').attr('itemtype','https://schema.org/Person')
         .text(function (e, i) {
@@ -55,55 +55,55 @@ function addReferencesToList(reference_array, html_list) {
             // provides a count on the number of items in the `property` array of a datum
             for (var i in reference_array) {
               for (var j in reference_array[i][property]) {
-                reference_array[i][property][j].parent_length = reference_array[i][property].length;
+                reference_array[i][property][j].parent_length = reference_array[i][property].length
               }
             }
-          })('author');
-          var returned = '';
-          if (i > 0) { returned += ',';
-            if (i === e.parent_length-1) returned += ' & ';
+          })('author')
+          var returned = ''
+          if (i > 0) { returned += ','
+            if (i === e.parent_length-1) returned += ' & '
           }
-          return returned;
-        });
+          return returned
+        })
 
       cite.author.person.name = cite.author.person.append('span').attr('itemprop','name')
-        .text(function (e) { return e.name; });
+        .text(function (e) { return e.name })
 
   cite.datePublished = cite.append('time').attr('itemprop','datePublished')
-    .attr('datetime', function (d) { return d.datePublished; })
-    .text(function (d) { return ' (' + d.datePublished + ').'; });
+    .attr('datetime', function (d) { return d.datePublished })
+    .text(function (d) { return ' (' + d.datePublished + ').' })
 
   cite.name = cite.append('span').attr('itemprop','name')
-    .text(function (d) { return ' ' + d.name + '.'; });
+    .text(function (d) { return ' ' + d.name + '.' })
 
   cite.publisher = cite.append('span').attr('itemprop','publisher')
-    .attr('itemscope','').attr('itemtype','https://schema.org/Organization');
+    .attr('itemscope','').attr('itemtype','https://schema.org/Organization')
 
     cite.publisher.location = cite.publisher.append('span').attr('itemprop','location')
-      .attr('itemscope','').attr('itemtype','https://schema.org/Place');
+      .attr('itemscope','').attr('itemtype','https://schema.org/Place')
 
       cite.publisher.location.address = cite.publisher.location.append('span').attr('itemprop','address')
-        .attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress');
+        .attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress')
 
         cite.publisher.location.address.append('span').attr('itemprop','addressLocality')
-          .text(function (d) { return ' ' + d.publisher.location.address.addressLocality + ','; })
+          .text(function (d) { return ' ' + d.publisher.location.address.addressLocality + ',' })
 
         cite.publisher.location.address.append('span').attr('itemprop','addressRegion')
-          .text(function (d) { return ' ' + d.publisher.location.address.addressRegion + ':'; });
+          .text(function (d) { return ' ' + d.publisher.location.address.addressRegion + ':' })
 
       cite.publisher.location.geo = cite.publisher.location.append('span').attr('itemprop','geo')
-        .attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates');
+        .attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates')
 
         cite.publisher.location.geo.append('meta').attr('itemprop','latitude')
-          .attr('content', function (d) { return d.publisher.location.geo.latitude; });
+          .attr('content', function (d) { return d.publisher.location.geo.latitude })
 
         cite.publisher.location.geo.append('meta').attr('itemprop','longitude')
-          .attr('content', function (d) { return d.publisher.location.geo.longitude; });
+          .attr('content', function (d) { return d.publisher.location.geo.longitude })
 
     cite.publisher.name = cite.publisher.append('span').attr('itemprop','name')
       .text(function (d) {
         return ' ' + d.publisher.name + (d.publisher.name.substr(-1) === '.' ? '' : '.')
-      });
+      })
 
   /**
     * Appends an HTML element, marked up with microdata, to a given element. This function is
@@ -112,46 +112,46 @@ function addReferencesToList(reference_array, html_list) {
   ```
   var user_rating = user_review.append('span').attr('itemprop', 'rating')
     .attr('itemscope','').attr('itemtype','https://schema.org/Rating')
-    .text(function (d) { return d.rating + ' out of 5 stars.'; });
+    .text(function (d) { return d.rating + ' out of 5 stars.' })
   user_rating.append('meta').attr('itemprop','ratingValue')
-    .attr('content',function (d) { return d.rating; });
+    .attr('content',function (d) { return d.rating })
   user_rating.append('meta').attr('itemprop','bestRating')
-    .attr('content', 5);
+    .attr('content', 5)
   ```
   ```
   var user_rating = appendMicrodata(user_review, {
-    element: 'span',
-    itemprop: 'rating',
-    itemtype: 'https://schema.org/Rating',
-    text: function (d) { return d.rating + ' out of 5 stars.'; }
-  });
+    element: 'span'
+  , itemprop: 'rating'
+  , itemtype: 'https://schema.org/Rating'
+  , text: function (d) { return d.rating + ' out of 5 stars.' }
+  })
   appendMicrodata(user_rating, {
-    element: 'meta',
-    itemprop: 'ratingValue',
-    content: function (d) { return d.rating; }
-  });
+    element: 'meta'
+  , itemprop: 'ratingValue'
+  , content: function (d) { return d.rating }
+  })
   appendMicrodata(user_rating, {
-    element: 'meta',
-    itemprop: 'bestRating',
-    content: 5
-  });
+    element: 'meta'
+  , itemprop: 'bestRating'
+  , content: 5
+  })
   ```
   @param d3object the object on which to call d3's `.append()` method
   @param args     an object of the form:
   {
-    element  : required string. the name of the element to append (with no angle brackets),
-    itemprop : optional string. the value(s) of the `itemprop` attribute of the new element,
-    itemtype : optional string. the full value of the `itemtype` attribute,
-    content  : optional string or function. takes (d) as an argument and returns the `[content]` attribute's value,
-    text     : optional string or function. takes (d) as an argument and returns the text,
+    element  : required string. the name of the element to append (with no angle brackets)
+  , itemprop : optional string. the value(s) of the `itemprop` attribute of the new element
+  , itemtype : optional string. the full value of the `itemtype` attribute
+  , content  : optional string or function. takes (d) as an argument and returns the `[content]` attribute's value
+  , text     : optional string or function. takes (d) as an argument and returns the text
   }
     */
   function appendMicrodata(d3object, args) {
-    var el = d3object.append(args.element);
-    if (args.itemprop) el.attr('itemprop',args.itemprop);
-    if (args.itemtype) el.attr('itemscope','').attr('itemtype',args.itemtype);
-    if (args.content)  el.attr('content',args.content);
-    el.text(args.text || '');
-    return el;
+    var el = d3object.append(args.element)
+    if (args.itemprop) el.attr('itemprop',args.itemprop)
+    if (args.itemtype) el.attr('itemscope','').attr('itemtype',args.itemtype)
+    if (args.content)  el.attr('content',args.content)
+    el.text(args.text || '')
+    return el
   }
 }
