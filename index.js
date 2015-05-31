@@ -46,25 +46,18 @@ function addReferencesToList(reference_array, html_list) {
 
   cite.author = cite.append('span').attr('itemprop','author')
 
-    cite.author.person = cite.author.selectAll('span')
-      .data(function (d) { return d.author }).enter()
-      .append('span')
-        .attr('itemscope','').attr('itemtype','https://schema.org/Person')
-        .text(function (e, i) {
-          (function count(property) {
-            // provides a count on the number of items in the `property` array of a datum
-            for (var i in reference_array) {
-              for (var j in reference_array[i][property]) {
-                reference_array[i][property][j].parent_length = reference_array[i][property].length
-              }
-            }
-          })('author')
-          var returned = ''
-          if (i > 0) { returned += ','
-            if (i === e.parent_length-1) returned += ' & '
-          }
-          return returned
-        })
+  cite.author.update = cite.author.selectAll('span').data(function (d) { return d.author })
+  cite.author.update.enter().append('span')
+  cite.author.update.exit().remove()
+
+    cite.author.person = cite.author.update
+      .attr('itemscope','').attr('itemtype','https://schema.org/Person')
+      .classed('Person', true)
+      .text(function (e, i) {
+        var n_last_author = this.parentNode.__data__.author.length - 1;
+        return i > 0 ? ', ' + (i === n_last_author ? '& ' : '') : ''
+      })
+
 
       cite.author.person.name = cite.author.person.append('span').attr('itemprop','name')
         .text(function (e) { return e.name })
