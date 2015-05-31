@@ -9,7 +9,7 @@
       <span itemscope="" itemtype="http://schema.org/Person">
         <span itemprop="name">Mardsen, J. E.</span>
       </span>
-      and
+      , &amp;
       <span itemscope="" itemtype="http://schema.org/Person">
         <span itemprop="name">Tromba, A. J.</span>
       </span>
@@ -40,7 +40,7 @@ function addReferencesToList(reference_array, html_list) {
   update.enter().append('li')
   update.exit().remove()
 
-  var cite = d3.select(html_list).selectAll('li').append('cite').attr('itemprop','citation')
+  var cite = update.append('cite').attr('itemprop','citation')
     .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype })
     .attr('id', function (d) { return d.id })
 
@@ -85,19 +85,19 @@ function addReferencesToList(reference_array, html_list) {
       cite.publisher.location.address = cite.publisher.location.append('span').attr('itemprop','address')
         .attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress')
 
-        cite.publisher.location.address.append('span').attr('itemprop','addressLocality')
+        cite.publisher.location.address.addressLocality = cite.publisher.location.address.append('span').attr('itemprop','addressLocality')
           .text(function (d) { return ' ' + d.publisher.location.address.addressLocality + ',' })
 
-        cite.publisher.location.address.append('span').attr('itemprop','addressRegion')
+        cite.publisher.location.address.addressRegion = cite.publisher.location.address.append('span').attr('itemprop','addressRegion')
           .text(function (d) { return ' ' + d.publisher.location.address.addressRegion + ':' })
 
       cite.publisher.location.geo = cite.publisher.location.append('span').attr('itemprop','geo')
         .attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates')
 
-        cite.publisher.location.geo.append('meta').attr('itemprop','latitude')
+        cite.publisher.location.geo.latitude = cite.publisher.location.geo.append('meta').attr('itemprop','latitude')
           .attr('content', function (d) { return d.publisher.location.geo.latitude })
 
-        cite.publisher.location.geo.append('meta').attr('itemprop','longitude')
+        cite.publisher.location.geo.longitude = cite.publisher.location.geo.append('meta').attr('itemprop','longitude')
           .attr('content', function (d) { return d.publisher.location.geo.longitude })
 
     cite.publisher.name = cite.publisher.append('span').attr('itemprop','name')
