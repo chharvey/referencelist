@@ -98,6 +98,38 @@ function addReferencesToList(reference_array, html_list) {
         return ' ' + d.publisher.name + (d.publisher.name.substr(-1) === '.' ? '' : '.')
       })
 
+  // This function takes the `itemprop` attribute (if it exists)
+  // of an element (or d3 selection of elements)
+  // and appends it to the `class` attribute of that element,
+  // proceeded by a `?`.
+  //
+  // Example: given <div class="foo" itemprop = 'address'> as a d3 selection,
+  // this function will do: <div class="foo ?address">.
+  function addClassItemprop(d3_selection) {
+    d3_selection.attr('class',
+      (d3_selection.attr('class') || '') +
+      (d3_selection.attr('itemprop') ? ' ?' + d3_selection.attr('itemprop') : '')
+    )
+  }
+
+  addClassItemprop(update)
+  addClassItemprop(cite)
+  addClassItemprop(cite.author)
+  addClassItemprop(cite.author.name)
+  addClassItemprop(cite.datePublished)
+  addClassItemprop(cite.name)
+  addClassItemprop(cite.publisher)
+  addClassItemprop(cite.publisher.location)
+  addClassItemprop(cite.publisher.location.address)
+  addClassItemprop(cite.publisher.location.address.addressLocality)
+  addClassItemprop(cite.publisher.location.address.addressRegion)
+  addClassItemprop(cite.publisher.location.geo)
+  addClassItemprop(cite.publisher.location.geo.latitude)
+  addClassItemprop(cite.publisher.location.geo.longitude)
+  addClassItemprop(cite.publisher.name)
+
+  console.log(update)
+
   /**
     * Appends an HTML element, marked up with microdata, to a given element. This function is
     * cleaner, but more verbose. Examples below. The first is using normal d3 syntax while
