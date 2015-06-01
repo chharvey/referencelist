@@ -52,7 +52,6 @@ function addReferencesToList(reference_array, html_list) {
 
   author.update
     .attr('itemscope','').attr('itemtype','https://schema.org/Person')
-    .classed('Person', true)
     .text(function (e, i) {
       var n_last_author = this.parentNode.__data__.author.length - 1;
       return i > 0 ? ', ' + (i === n_last_author ? '& ' : '') : ''
@@ -97,22 +96,43 @@ function addReferencesToList(reference_array, html_list) {
         return ' ' + d.publisher.name + (d.publisher.name.slice(-1) === '.' ? '' : '.')
       })
 
-  // This function takes the `itemprop` attribute (if it exists)
-  // of an element (or d3 selection of elements)
-  // and appends it to the `class` attribute of that element,
-  // proceeded by a `?`.
+  // This function appends the value of the `itemprop` attribute (if it exists)
+  // to the `class` attribute of an element (or d3 selection of elements).
+  // The classname is proceeded by a `?`.
   //
-  // Example: given <div class="foo" itemprop = 'address'> as a d3 selection,
-  // this function will do: <div class="foo ?address">.
+  // Example: given `<div class="foo" itemprop="address">` as a d3 selection,
+  // this function will do: `<div class="foo ?address">`.
   function addClassItemprop(d3_selection) {
     d3_selection.attr('class', function () {
-      var self = d3.select(this)
-      return (self.attr('class') || '') +
-             (self.attr('itemprop') ? ' ?' + self.attr('itemprop') : '')
+      var my_class = d3.select(this).attr('class')
+        , my_prop  = d3.select(this).attr('itemprop')
+      return (my_class || '') +
+             (my_prop ? ' ?' + my_prop : '')
     })
     return d3_selection
   }
+
+  // This function appends a substring of the value of the `itemtype` attribute (if it exists)
+  // to the `class` attribute of an element (or d3 selection of elements).
+  // The substring is the part of the value following the last `/`.
+  // The classname is then proceeded by a `%`.
+  //
+  // Example: given `<div class="foo" itemtype="https://schema.org/Book">` as a d3 selection,
+  // this function will do: `<div class="foo %Book">`.
+  function addClassItemtype(d3_selection) {
+    d3_selection.attr('class', function () {
+      // var path = require('path')
+      var my_class = d3.select(this).attr('class')
+        , my_type  = d3.select(this).attr('itemtype')
+      return (my_class || '') +
+             (my_type ? ' %' + my_type : '')
+            //  (my_type ? ' %' + path.parse(my_type).base : '')
+    })
+    return d3_selection
+  }
+
   addClassItemprop(d3.selectAll('[itemprop]'))
+  addClassItemtype(d3.selectAll('[itemtype]'))
 
   return update
 
