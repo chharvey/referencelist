@@ -44,58 +44,57 @@ function addReferencesToList(reference_array, html_list) {
     .attr('itemscope','').attr('itemtype', function (d) { return d.itemtype })
     .attr('id', function (d) { return d.id })
 
-  cite.author = cite.append('span').attr('itemprop','author')
+  var author = cite.append('span').attr('itemprop','author')
 
-  cite.author.update = cite.author.selectAll('span').data(function (d) { return d.author })
-  cite.author.update.enter().append('span')
-  cite.author.update.exit().remove()
+  author.update = author.selectAll('span').data(function (d) { return d.author })
+  author.update.enter().append('span') // itemtype="Person"
+  author.update.exit().remove()
 
-    cite.author.person = cite.author.update
-      .attr('itemscope','').attr('itemtype','https://schema.org/Person')
-      .classed('Person', true)
-      .text(function (e, i) {
-        var n_last_author = this.parentNode.__data__.author.length - 1;
-        return i > 0 ? ', ' + (i === n_last_author ? '& ' : '') : ''
-      })
+  author.update
+    .attr('itemscope','').attr('itemtype','https://schema.org/Person')
+    .classed('Person', true)
+    .text(function (e, i) {
+      var n_last_author = this.parentNode.__data__.author.length - 1;
+      return i > 0 ? ', ' + (i === n_last_author ? '& ' : '') : ''
+    })
 
+    var author_name = author.update.append('span').attr('itemprop','name')
+      .text(function (e) { return e.name })
 
-      cite.author.person.name = cite.author.person.append('span').attr('itemprop','name')
-        .text(function (e) { return e.name })
-
-  cite.datePublished = cite.append('time').attr('itemprop','datePublished')
+  var datePublished = cite.append('time').attr('itemprop','datePublished')
     .attr('datetime', function (d) { return d.datePublished })
     .text(function (d) { return ' (' + d.datePublished + ').' })
 
-  cite.name = cite.append('span').attr('itemprop','name')
+  var name = cite.append('span').attr('itemprop','name')
     .text(function (d) { return ' ' + d.name + '.' })
 
-  cite.publisher = cite.append('span').attr('itemprop','publisher')
+  var publisher = cite.append('span').attr('itemprop','publisher')
     .attr('itemscope','').attr('itemtype','https://schema.org/Organization')
 
-    cite.publisher.location = cite.publisher.append('span').attr('itemprop','location')
+    var publisher_location = publisher.append('span').attr('itemprop','location')
       .attr('itemscope','').attr('itemtype','https://schema.org/Place')
 
-      cite.publisher.location.address = cite.publisher.location.append('span').attr('itemprop','address')
+      var publisher_location_address = publisher_location.append('span').attr('itemprop','address')
         .attr('itemscope','').attr('itemtype','https://schema.org/PostalAddress')
 
-        cite.publisher.location.address.addressLocality = cite.publisher.location.address.append('span').attr('itemprop','addressLocality')
+        var publisher_location_address_addressLocality = publisher_location_address.append('span').attr('itemprop','addressLocality')
           .text(function (d) { return ' ' + d.publisher.location.address.addressLocality + ',' })
 
-        cite.publisher.location.address.addressRegion = cite.publisher.location.address.append('span').attr('itemprop','addressRegion')
+        var publisher_location_address_addressRegion = publisher_location_address.append('span').attr('itemprop','addressRegion')
           .text(function (d) { return ' ' + d.publisher.location.address.addressRegion + ':' })
 
-      cite.publisher.location.geo = cite.publisher.location.append('span').attr('itemprop','geo')
+      var publisher_location_geo = publisher_location.append('span').attr('itemprop','geo')
         .attr('itemscope','').attr('itemtype','https://schema.org/GeoCoordinates')
 
-        cite.publisher.location.geo.latitude = cite.publisher.location.geo.append('meta').attr('itemprop','latitude')
+        var publisher_location_geo_latitude = publisher_location_geo.append('meta').attr('itemprop','latitude')
           .attr('content', function (d) { return d.publisher.location.geo.latitude })
 
-        cite.publisher.location.geo.longitude = cite.publisher.location.geo.append('meta').attr('itemprop','longitude')
+        var publisher_location_geo_longitude = publisher_location_geo.append('meta').attr('itemprop','longitude')
           .attr('content', function (d) { return d.publisher.location.geo.longitude })
 
-    cite.publisher.name = cite.publisher.append('span').attr('itemprop','name')
+    var publisher_name = publisher.append('span').attr('itemprop','name')
       .text(function (d) {
-        return ' ' + d.publisher.name + (d.publisher.name.substr(-1) === '.' ? '' : '.')
+        return ' ' + d.publisher.name + (d.publisher.name.slice(-1) === '.' ? '' : '.')
       })
 
   // This function takes the `itemprop` attribute (if it exists)
@@ -106,29 +105,16 @@ function addReferencesToList(reference_array, html_list) {
   // Example: given <div class="foo" itemprop = 'address'> as a d3 selection,
   // this function will do: <div class="foo ?address">.
   function addClassItemprop(d3_selection) {
-    d3_selection.attr('class',
-      (d3_selection.attr('class') || '') +
-      (d3_selection.attr('itemprop') ? ' ?' + d3_selection.attr('itemprop') : '')
-    )
+    d3_selection.attr('class', function () {
+      var self = d3.select(this)
+      return (self.attr('class') || '') +
+             (self.attr('itemprop') ? ' ?' + self.attr('itemprop') : '')
+    })
+    return d3_selection
   }
+  addClassItemprop(d3.selectAll('[itemprop]'))
 
-  addClassItemprop(update)
-  addClassItemprop(cite)
-  addClassItemprop(cite.author)
-  addClassItemprop(cite.author.name)
-  addClassItemprop(cite.datePublished)
-  addClassItemprop(cite.name)
-  addClassItemprop(cite.publisher)
-  addClassItemprop(cite.publisher.location)
-  addClassItemprop(cite.publisher.location.address)
-  addClassItemprop(cite.publisher.location.address.addressLocality)
-  addClassItemprop(cite.publisher.location.address.addressRegion)
-  addClassItemprop(cite.publisher.location.geo)
-  addClassItemprop(cite.publisher.location.geo.latitude)
-  addClassItemprop(cite.publisher.location.geo.longitude)
-  addClassItemprop(cite.publisher.name)
-
-  console.log(update)
+  return update
 
   /**
     * Appends an HTML element, marked up with microdata, to a given element. This function is
